@@ -43,7 +43,7 @@ def main(argv=None) -> int:
 
     print(json.dumps(result))
 
-    if issues or gaps or ranked:
+    if issues or gaps or result["policy"]:
         return 1
     return 0
 
