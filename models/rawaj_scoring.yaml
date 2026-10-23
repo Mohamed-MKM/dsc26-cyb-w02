@@ -24,7 +24,7 @@ flows:
   - {id: f05, source: scorer, target: case_db, data: [flag, explanation], protocol: tls, authenticated: true}
   - {id: f06, source: scorer, target: audit_log, data: [decision_record], protocol: tls, authenticated: true}
   - {id: f07, source: analyst, target: analyst_console, data: [case_decision], protocol: https, authenticated: true}
-  - {id: f08, source: analyst_console, target: case_db, data: [case_decision, customer_pii], protocol: postgres, authenticated: true}
+  - {id: f08, source: analyst_console, target: case_db, data: [case_decision, customer_pii], protocol: tls, authenticated: true}
 threats:
   - id: T1
     target: f01
@@ -83,3 +83,99 @@ threats:
   - {id: T24, target: scorer, category: R, title: Scorer cannot show which model version produced a past flag, likelihood: 3, impact: 4, status: open}
   - {id: T25, target: scorer, category: D, title: Crafted transfer graph with huge fan-out makes scoring take seconds, likelihood: 2, impact: 4, status: open}
   - {id: T26, target: case_db, category: D, title: Case database fills its disk during a scam wave and stops accepting flags, likelihood: 2, impact: 4, status: open}
+
+  - id: T27
+    target: analyst_console
+    category: S
+    title: Stolen analyst credentials allow an attacker to impersonate a legitimate console user
+    likelihood: 3
+    impact: 5
+    status: open
+
+  - id: T28
+    target: analyst_console
+    category: T
+    title: A compromised console session changes a case decision before it reaches the database
+    likelihood: 3
+    impact: 5
+    status: open
+
+  - id: T29
+    target: analyst_console
+    category: R
+    title: An analyst denies approving a suspicious transfer because console actions lack reliable audit evidence
+    likelihood: 2
+    impact: 4
+    status: open
+
+  - id: T30
+    target: analyst_console
+    category: I
+    title: Customer personal information appears in console responses beyond the analyst's authorized case
+    likelihood: 3
+    impact: 5
+    status: open
+
+  - id: T31
+    target: analyst_console
+    category: D
+    title: Repeated case searches exhaust console workers and prevent analysts from reviewing urgent alerts
+    likelihood: 3
+    impact: 4
+    status: open
+
+  - id: T32
+    target: analyst_console
+    category: E
+    title: An analyst exploits a role-check weakness to gain administrator privileges in the console
+    likelihood: 2
+    impact: 5
+    status: open
+
+  - id: T33
+    target: case_db
+    category: T
+    title: An unauthorized database update changes a flagged transfer's case status or investigation evidence
+    likelihood: 3
+    impact: 5
+    status: open
+
+  - id: T34
+    target: f08
+    category: T
+    title: Case decision data is altered in transit between the analyst console and the case database
+    likelihood: 2
+    impact: 5
+    status: open
+
+  - id: T35
+    target: f08
+    category: I
+    title: Customer personal information is exposed while case data travels between the console and database
+    likelihood: 2
+    impact: 5
+    status: open
+
+  - id: T36
+    target: f08
+    category: D
+    title: Excessive database requests from the analyst console delay case updates and block investigation work
+    likelihood: 3
+    impact: 4
+    status: open
+
+  - id: T37
+    target: scorer
+    category: E
+    title: A compromised scoring service account gains privileges to modify model files or security settings
+    likelihood: 2
+    impact: 5
+    status: open
+
+  - id: T38
+    target: feature_store
+    category: I
+    title: Unauthorized access to stored account features exposes sensitive customer information
+    likelihood: 3
+    impact: 5
+    status: open
